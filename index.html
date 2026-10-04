@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NEXT &amp; Seek | The NEXTPredict Summit game</title>
+<meta name="description" content="Hide and seek inside Convene, 30 Hudson Yards, the home of NEXTPredict Summit NYC on 22 to 23 October 2026. Free in your browser, up to 16 delegates a game.">
+<meta name="theme-color" content="#0A0A0A">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="canonical" href="https://pierreobv.github.io/next-and-seek/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="NEXTPredict">
+<meta property="og:title" content="NEXT &amp; Seek | The NEXTPredict Summit game">
+<meta property="og:description" content="Hide and seek inside our New York venue. Free in your browser, up to 16 delegates a game.">
+<meta property="og:url" content="https://pierreobv.github.io/next-and-seek/">
+<meta property="og:image" content="https://pierreobv.github.io/next-and-seek/og.jpg">
+<meta property="og:image:width" content="1920">
+<meta property="og:image:height" content="1080">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="NEXT &amp; Seek | The NEXTPredict Summit game">
+<meta name="twitter:description" content="Hide and seek inside our New York venue. Free in your browser.">
+<meta name="twitter:image" content="https://pierreobv.github.io/next-and-seek/og.jpg">
+<link rel="preload" href="inter-800.woff2" as="font" type="font/woff2" crossorigin>
+<style>
+@font-face { font-family: 'Inter'; font-weight: 800; font-display: swap; src: url(inter-800.woff2) format('woff2'); }
+@font-face { font-family: 'Inter'; font-weight: 600; font-display: swap; src: url(inter-600.woff2) format('woff2'); }
+@font-face { font-family: 'Inter'; font-weight: 500; font-display: swap; src: url(inter-500.woff2) format('woff2'); }
+:root { --ink: #0A0A0A; --gold: #FFCF33; --white: #FFFFFF; --text2: #A6A6A6; --muted: #6B6B6B; --line: #232325; --pad: clamp(16px, 4vw, 40px); --max: 1200px; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--ink); color: var(--white); font-family: 'Inter', Arial, Helvetica, sans-serif; font-weight: 500; -webkit-font-smoothing: antialiased; }
+body.playing { overflow: hidden; }
+a { color: inherit; }
+img { display: block; }
+.wrap { width: min(var(--max), 100%); margin: 0 auto; padding: 0 var(--pad); }
+.label { margin: 0; color: var(--gold); font-weight: 600; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; }
+h1, h2, h3 { font-weight: 800; letter-spacing: -0.03em; margin: 0; }
+h2 { font-size: clamp(36px, 5vw, 64px); line-height: 0.95; }
+h3 { font-size: 22px; line-height: 1.15; }
+p { margin: 0; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 10px; border: 0; border-radius: 12px; padding: 14px 22px; font: 800 16px/1 'Inter', Arial, sans-serif; letter-spacing: -0.01em; cursor: pointer; text-decoration: none; }
+.btn.gold { background: var(--gold); color: var(--ink); }
+.btn.dark { background: var(--ink); color: var(--white); }
+.btn.big { padding: 20px 34px; font-size: 22px; border-radius: 16px; }
+.btn:focus-visible, a:focus-visible, button:focus-visible { outline: 3px solid var(--white); outline-offset: 3px; }
+
+/* top bar */
+.top { position: sticky; top: 0; z-index: 10; background: var(--ink); }
+.top .wrap { height: 68px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+.top .brand img { height: 26px; width: auto; }
+.top nav { display: flex; align-items: center; gap: 26px; }
+.top nav a:not(.btn) { color: var(--text2); text-decoration: none; font-weight: 600; font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; }
+.top nav a:not(.btn):hover { color: var(--white); }
+.top .btn { padding: 11px 16px; font-size: 14px; border-radius: 10px; }
+
+/* hero: the game */
+.hero { padding: clamp(18px, 3vw, 34px) 0 0; text-align: center; }
+.hero h1 { font-size: clamp(48px, min(10vw, 12.5vh), 132px); line-height: 0.86; letter-spacing: -0.045em; margin: 14px 0 16px; }
+.hero h1 span { color: var(--gold); }
+.hero .lede { font-size: clamp(17px, 1.6vw, 21px); color: #E6E6E6; }
+.invite[hidden] { display: none; }
+.invite { display: inline-block; margin-top: 16px; font-weight: 600; color: var(--ink); background: var(--gold); padding: 8px 14px; border-radius: 10px; }
+.stage { position: relative; margin: clamp(18px, 2.6vw, 30px) auto 0; width: min(100%, max(600px, calc((100vh - 330px) * 16 / 9))); aspect-ratio: 16 / 9; border-radius: 18px; overflow: hidden; background: #1a1a1a; }
+.stage .poster { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.stage .shade { position: absolute; inset: 0; background: rgba(10, 10, 10, 0.32); }
+.stage .go { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 20px; }
+.stage .go .note { font-weight: 600; font-size: 13px; letter-spacing: 0.06em; color: var(--white); background: rgba(10, 10, 10, 0.72); padding: 7px 12px; border-radius: 8px; }
+.stage .phone { display: none; max-width: 420px; text-align: center; background: rgba(10, 10, 10, 0.86); padding: 18px 20px; border-radius: 14px; font-size: 16px; line-height: 1.45; }
+.stage .phone .btn { margin-top: 12px; font-size: 15px; padding: 12px 18px; }
+body.touch .stage .desk { display: none; }
+body.touch .stage .phone { display: block; }
+.credit { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 26px 0 8px; }
+.credit img { height: 34px; width: auto; }
+
+/* sections */
+section.block { padding: clamp(64px, 9vw, 120px) 0 0; }
+.how .wrap { display: grid; grid-template-columns: 1fr minmax(240px, 340px); gap: clamp(28px, 5vw, 72px); align-items: start; }
+.steps { list-style: none; margin: 34px 0 0; padding: 0; display: grid; gap: 30px; }
+.steps li { display: grid; grid-template-columns: 74px 1fr; gap: 6px 18px; }
+.steps b { grid-row: span 2; color: var(--gold); font-weight: 800; font-size: 44px; line-height: 0.9; letter-spacing: -0.04em; }
+.steps p, .grid p { color: var(--text2); font-size: 17px; line-height: 1.5; }
+.keys { margin-top: 34px; color: var(--text2); font-size: 15px; line-height: 1.6; }
+.keys kbd { font: 800 13px 'Inter', Arial, sans-serif; color: var(--ink); background: var(--white); border-radius: 6px; padding: 2px 7px; margin: 0 2px; }
+.trailer { margin: 0; }
+.trailer video { width: 100%; aspect-ratio: 2 / 3; border-radius: 16px; background: #1a1a1a; display: block; }
+.trailer figcaption { margin-top: 12px; }
+.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(24px, 4vw, 48px); margin-top: 38px; }
+.grid b { display: block; color: var(--gold); font-weight: 800; font-size: 64px; line-height: 0.9; letter-spacing: -0.04em; margin-bottom: 14px; }
+.grid h3 { margin-bottom: 8px; }
+.host { margin-top: 38px; color: var(--text2); font-size: 17px; line-height: 1.5; max-width: 760px; }
+.host b { color: var(--white); font-weight: 600; }
+
+/* partners: the tier sets the size */
+.partners { text-align: center; }
+.tier { display: flex; flex-direction: column; align-items: center; gap: 22px; padding-top: clamp(40px, 6vw, 64px); }
+.tier .logos { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 28px clamp(28px, 4vw, 56px); }
+.tier figure { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.tier figcaption { color: var(--text2); font-weight: 600; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; }
+.tier img { height: calc(var(--s) * var(--f)); width: auto; }
+.t1 { --s: clamp(64px, 11vw, 120px); }
+.t2 { --s: clamp(46px, 7vw, 80px); }
+.t3 { --s: clamp(32px, 4.4vw, 52px); }
+.rule { display: flex; align-items: center; gap: 18px; width: 100%; }
+.rule::before, .rule::after { content: ''; flex: 1; height: 2px; background: var(--gold); }
+
+/* the summit */
+.summit { text-align: center; padding-bottom: clamp(64px, 9vw, 120px); }
+.summit h2 { font-size: clamp(40px, 6vw, 84px); margin: 18px 0 18px; }
+.summit h2 span { color: var(--gold); }
+.summit .when { color: #E6E6E6; font-size: clamp(17px, 1.6vw, 21px); margin-bottom: 30px; }
+footer { border-top: 1px solid var(--line); padding: 28px 0 40px; color: var(--muted); font-size: 13px; line-height: 1.6; }
+footer .wrap { display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+footer a { color: var(--text2); }
+
+/* the game, full window */
+#theater { position: fixed; inset: 0; z-index: 100; background: var(--ink); display: flex; flex-direction: column; }
+#theater[hidden] { display: none; }
+#theater .bar { height: 46px; flex: none; display: flex; align-items: center; gap: 18px; padding: 0 10px 0 18px; }
+#theater .bar .t { font-weight: 800; font-size: 15px; letter-spacing: -0.01em; }
+#theater .bar .t span { color: var(--gold); }
+#theater .bar .pc { display: flex; align-items: center; gap: 10px; margin-left: auto; margin-right: 14px; }
+#theater .bar .pc span { color: var(--gold); font-weight: 600; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; }
+#theater .bar .pc img { height: 17px; width: auto; }
+#theater .bar button { background: transparent; color: var(--white); border: 1px solid #3a3a3d; border-radius: 9px; padding: 7px 12px; font: 600 13px 'Inter', Arial, sans-serif; cursor: pointer; }
+#theater .bar button:hover { border-color: var(--white); }
+#theater iframe { flex: 1; width: 100%; border: 0; display: block; background: var(--ink); }
+
+@media (max-width: 860px) {
+  .top nav a:not(.btn) { display: none; }
+  .how .wrap { grid-template-columns: 1fr; }
+  .trailer { max-width: 360px; }
+  .grid { grid-template-columns: 1fr; }
+  .stage { border-radius: 12px; }
+  .stage .go .note { display: none; }
+  .btn.big { padding: 16px 24px; font-size: 18px; }
+}
+@media (max-width: 560px) {
+  #theater .bar .pc { display: none; }
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="https://nextpredict.io/" aria-label="NEXTPredict"><img src="np-logo.svg" alt="NEXTPredict" width="107" height="26"></a>
+    <nav>
+      <a href="#how">How to play</a>
+      <a href="#together">Play together</a>
+      <a href="#partners">Partners</a>
+      <a class="btn gold" href="https://nextpredict.io/summits/the-worlds-prediction-markets-summit/#tickets">Get tickets</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <p class="label">The NEXTPredict Summit game</p>
+      <h1>NEXT <span>&amp;</span> SEEK</h1>
+      <p class="lede">Hide and seek inside our New York venue. Free in your browser, no sign-up.</p>
+      <p class="invite" id="invite" hidden>You are invited to game <b></b></p>
+      <div class="stage">
+        <img class="poster" src="poster.jpg" alt="The Auditor walks through the café at Convene, past a delegate painted into a plant">
+        <div class="shade"></div>
+        <div class="go">
+          <div class="desk">
+            <button class="btn gold big" id="play" type="button">Play now</button>
+          </div>
+          <p class="note desk">Laptop or desktop, mouse and keyboard. Best in Chrome.</p>
+          <div class="phone">
+            <p>NEXT &amp; Seek plays on a laptop or desktop with a mouse and keyboard. Open this page on your computer to play.</p>
+            <button class="btn gold" id="copy" type="button">Copy the link</button>
+          </div>
+        </div>
+      </div>
+      <div class="credit">
+        <p class="label">Headline partner</p>
+        <img src="mrkts.svg" alt="mrkts" width="191" height="34">
+      </div>
+    </div>
+  </section>
+
+  <section class="block how" id="how">
+    <div class="wrap">
+      <div>
+        <p class="label">How to play</p>
+        <h2>Hide in plain sight.</h2>
+        <ol class="steps">
+          <li><b>01</b><h3>Paint yourself in</h3><p>Pick colours from the room, paint your delegate and strike a pose.</p></li>
+          <li><b>02</b><h3>Stay still</h3><p>The Auditor comes up in the lift with a camera. One photo and you are out.</p></li>
+          <li><b>03</b><h3>Outlast the round</h3><p>A point for every second you stay hidden, and 100 more if you last the whole round.</p></li>
+        </ol>
+        <p class="keys"><kbd>W A S D</kbd> walk, <kbd>F</kbd> paint, <kbd>R</kbd> pose, <kbd>E</kbd> sit or hide, <kbd>V</kbd> talk. Rather be the Auditor? Choose Seek and find every delegate.</p>
+      </div>
+      <figure class="trailer">
+        <video src="trailer.mp4" poster="trailer.jpg" controls playsinline preload="none"></video>
+        <figcaption class="label">The 25-second trailer</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="block" id="together">
+    <div class="wrap">
+      <p class="label">Play together</p>
+      <h2>Bring the whole desk.</h2>
+      <div class="grid">
+        <div><b>16</b><h3>Delegates a game</h3><p>Choose Play online and join any live game from the list. No code, no password.</p></div>
+        <div><b>5</b><h3>Rounds a match</h3><p>Points carry across the rounds. A tie for first goes to sudden death.</p></div>
+        <div><b>V</b><h3>Hold to talk</h3><p>Push to talk reaches everyone in the game. Chat and taunts work too.</p></div>
+      </div>
+      <p class="host"><b>Hosting?</b> Create a game, set the rounds and copy the invite. Anyone who joins late plays from the next round, and you can start the next match straight after.</p>
+    </div>
+  </section>
+
+  <section class="block partners" id="partners">
+    <div class="wrap">
+      <p class="label">NEXTPredict Summit NYC</p>
+      <h2>Our Proud Partners</h2>
+      <div class="tier t1">
+        <p class="label rule">Headline partner</p>
+        <div class="logos"><img src="mrkts.svg" alt="mrkts" style="--f: 0.843"></div>
+      </div>
+      <div class="tier t2">
+        <p class="label rule">Strategic partner</p>
+        <div class="logos"><img src="morganstanley.png" alt="Morgan Stanley" style="--f: 0.759"></div>
+      </div>
+      <div class="tier t3">
+        <p class="label rule">Official partners</p>
+        <div class="logos">
+          <figure><img src="rolr.svg" alt="Rolr" style="--f: 0.993"></figure>
+          <figure><img src="edge.png" alt="EDGE Markets" style="--f: 1.194"><figcaption>Agenda partner</figcaption></figure>
+          <figure><img src="radar.png" alt="Radar" style="--f: 0.974"></figure>
+          <figure><img src="betconstruct.svg" alt="BetConstruct AI" style="--f: 0.754"><figcaption>Ticket partner</figcaption></figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block summit">
+    <div class="wrap">
+      <p class="label">The World's Largest Prediction Markets Summit</p>
+      <h2>Where the smart money goes<span>.</span></h2>
+      <p class="when">22 to 23 October 2026 | Convene, 30 Hudson Yards, New York</p>
+      <a class="btn gold big" href="https://nextpredict.io/summits/the-worlds-prediction-markets-summit/#tickets">Get tickets</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>NEXT &amp; Seek is a NEXTPredict game for the delegates of NEXTPredict Summit NYC.<br>The venue is modelled from Convene's Level 24 drawings and a laser scan of the floor.</p>
+    <p><a href="https://nextpredict.io/">NEXTPredict.io</a> | <a href="https://pierreobv.itch.io/next-and-seek">Also on itch.io</a></p>
+  </div>
+</footer>
+
+<div id="theater" hidden>
+  <div class="bar">
+    <span class="t">NEXT <span>&amp;</span> SEEK</span>
+    <span class="pc"><span>Headline partner</span><img src="mrkts.svg" alt="mrkts" width="96" height="17"></span>
+    <button type="button" id="fs">Full screen</button>
+    <button type="button" id="close">Close the game</button>
+  </div>
+  <iframe id="game" title="NEXT &amp; Seek" allow="microphone; fullscreen; autoplay; clipboard-write"></iframe>
+</div>
+
+<script>
+(() => {
+  const $ = (s) => document.querySelector(s);
+  const params = new URLSearchParams(location.search);
+  const room = (params.get('room') || '').toUpperCase().replace(/[^A-Z]/g, '').slice(0, 4);
+  const touch = matchMedia('(hover: none) and (pointer: coarse)').matches;
+  if (touch) document.body.classList.add('touch');
+  if (room.length === 4) {
+    $('#invite').hidden = false;
+    $('#invite b').textContent = room;
+    $('#play').textContent = 'Join game ' + room;
+  }
+  const theater = $('#theater'), frame = $('#game');
+  function openGame() {
+    const src = 'game.html' + (room.length === 4 ? '?room=' + room : '');
+    theater.hidden = false;
+    document.body.classList.add('playing');
+    frame.addEventListener('load', () => { try { frame.contentWindow.focus(); } catch (e) { /* ignore */ } }, { once: true });
+    frame.src = src;
+    frame.focus();
+  }
+  function closeGame() {
+    if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+    frame.src = 'about:blank';
+    theater.hidden = true;
+    document.body.classList.remove('playing');
+    $('#play').focus();
+  }
+  $('#play').addEventListener('click', openGame);
+  $('#close').addEventListener('click', closeGame);
+  $('#fs').addEventListener('click', () => {
+    if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+    else theater.requestFullscreen?.().catch(() => {});
+    try { frame.contentWindow.focus(); } catch (e) { /* ignore */ }
+  });
+  document.addEventListener('fullscreenchange', () => { $('#fs').textContent = document.fullscreenElement ? 'Exit full screen' : 'Full screen'; });
+  $('#copy').addEventListener('click', async () => {
+    const b = $('#copy');
+    try { await navigator.clipboard.writeText(location.href); b.textContent = 'Link copied'; }
+    catch (e) { b.textContent = location.href; }
+  });
+  // warm the game file on computers so Play starts quickly
+  if (!touch) addEventListener('load', () => {
+    const l = document.createElement('link'); l.rel = 'prefetch'; l.href = 'game.html'; document.head.append(l);
+  });
+})();
+</script>
+</body>
+</html>
